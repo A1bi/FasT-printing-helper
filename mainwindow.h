@@ -4,8 +4,11 @@
 #include <QMainWindow>
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
+
+class QPrinterInfo;
+class QSettings;
 
 class MainWindow : public QMainWindow
 {
@@ -17,6 +20,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QSettings *settings;
+    static const QString printerNameSetting;
+
+private slots:
+    void save();
 };
 
 #endif // MAINWINDOW_H
