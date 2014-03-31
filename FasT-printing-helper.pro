@@ -14,14 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    printeventfilter.cpp
+    application.cpp
 
 HEADERS  += mainwindow.h \
-    printeventfilter.h
+    application.h
 
 FORMS    += mainwindow.ui
 
 macx {
+    LIBS += -framework Carbon
+
     QMAKE_INFO_PLIST = Info.plist
 
     OTHER_FILES += \

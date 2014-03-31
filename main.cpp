@@ -1,14 +1,7 @@
-#include "mainwindow.h"
-#include "printeventfilter.h"
-#include <QApplication>
+#include "application.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    app.installEventFilter(new PrintEventFilter());
-
-    MainWindow w;
-    w.show();
-
+    Application app(argc, argv);
     return app.exec();
 }

@@ -16,6 +16,8 @@
     <string>FasT-printing-helper</string>
     <key>CFBundleIdentifier</key>
     <string>de.albisigns.fastprint</string>
+    <key>LSUIElement</key>
+    <true/>
     <key>LSHasLocalizedDisplayName</key>
     <true/>
     <key>CFBundleDisplayName</key>
