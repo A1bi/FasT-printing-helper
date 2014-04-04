@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui printsupport
+QT       += core gui printsupport network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,15 +14,19 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    application.cpp
+    application.cpp \
+    ticketprinter.cpp
 
 HEADERS  += mainwindow.h \
-    application.h
+    application.h \
+    ticketprinter.h
 
 FORMS    += mainwindow.ui
 
 macx {
-    LIBS += -framework Carbon
+    LIBS += -framework Carbon /usr/local/lib/libpoppler-qt5.dylib
+
+    INCLUDEPATH += /usr/local/include/poppler/qt5
 
     QMAKE_INFO_PLIST = Info.plist
 

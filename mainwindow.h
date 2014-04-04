@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "ticketprinter.h"
 
 namespace Ui {
     class MainWindow;
@@ -21,7 +22,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QSettings *settings;
-    static const QString printerNameSetting;
+    TicketPrinter printer;
 
 private slots:
     void save();

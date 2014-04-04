@@ -1,17 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "application.h"
 #include <QPrinterInfo>
 #include <QDebug>
 #include <QSettings>
-
-const QString MainWindow::printerNameSetting = "printerName";
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    settings = new QSettings;
+    settings = static_cast<Application *>qApp->getSettings();
 
     connect(ui->saveBtn, SIGNAL(clicked()), this, SLOT(save()));
     connect(ui->cancelBtn, SIGNAL(clicked()), this, SLOT(close()));
@@ -21,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     for (int i = 0; i < printers.size(); ++i) {
         QPrinterInfo printer = printers.at(i);
         ui->printerSelect->addItem(printer.description(), QVariant(printer.printerName()));
-        if (settings->value(printerNameSetting) == printer.printerName()) {
+        if (settings->value(Application::printerNameSetting) == printer.printerName()) {
             ui->printerSelect->setCurrentIndex(i);
         }
     }
@@ -34,6 +33,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::save()
 {
-    settings->setValue(printerNameSetting, ui->printerSelect->currentData());
+    settings->setValue(Application::printerNameSetting, ui->printerSelect->currentData());
     close();
 }
