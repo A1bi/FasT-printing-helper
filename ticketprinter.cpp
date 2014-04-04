@@ -57,6 +57,8 @@ void TicketPrinter::printData(const QByteArray *data)
         }
     }
     painter.end();
+
+    emit finished();
 }
 
 void TicketPrinter::finishedDownloading(QNetworkReply *reply)

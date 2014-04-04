@@ -21,6 +21,7 @@ private:
     void printData(const QByteArray*);
 
 signals:
+    void finished();
 
 private slots:
     void finishedDownloading(QNetworkReply*);

@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     settings = static_cast<Application *>qApp->getSettings();
 
-    connect(ui->saveBtn, SIGNAL(clicked()), this, SLOT(save()));
+    connect(ui->submitBtn, SIGNAL(clicked()), this, SLOT(submit()));
     connect(ui->cancelBtn, SIGNAL(clicked()), this, SLOT(close()));
     setWindowFlags(Qt::WindowTitleHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint | Qt::WindowMinimizeButtonHint);
 
@@ -31,8 +31,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::save()
+void MainWindow::enableMissingPrinterMode()
+{
+    ui->submitBtn->setText(tr("print"));
+}
+
+void MainWindow::submit()
 {
     settings->setValue(Application::printerNameSetting, ui->printerSelect->currentData());
+    emit submitted();
     close();
 }

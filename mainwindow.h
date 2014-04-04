@@ -18,14 +18,18 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void enableMissingPrinterMode();
 
 private:
     Ui::MainWindow *ui;
     QSettings *settings;
-    TicketPrinter printer;
 
 private slots:
-    void save();
+    void submit();
+
+signals:
+    void submitted();
+
 };
 
 #endif // MAINWINDOW_H

@@ -23,6 +23,10 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
+TRANSLATIONS += i18n/app_de.ts
+
+RESOURCES += app.qrc
+
 macx {
     LIBS += -framework Carbon /usr/local/lib/libpoppler-qt5.dylib
 

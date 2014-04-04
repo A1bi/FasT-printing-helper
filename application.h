@@ -6,6 +6,7 @@
 class MainWindow;
 class QTimer;
 class QSettings;
+class TicketPrinter;
 
 class Application : public QApplication
 {
@@ -21,11 +22,16 @@ private:
     MainWindow *window;
     QTimer *windowTimer;
     QSettings *settings;
+    TicketPrinter *printer;
+    QString *queuedTicket;
 
     bool eventFilter(QObject*, QEvent*);
 
 private slots:
     void showWindow();
+    void windowSubmitted();
+    void finishedPrinting();
+
 };
 
 #endif // APPLICATION_H
