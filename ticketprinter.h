@@ -13,7 +13,7 @@ class TicketPrinter : public QObject
 public:
     explicit TicketPrinter(QObject *parent = 0);
     ~TicketPrinter();
-    void printTicket(const QString path);
+    void printTicket(QString *path);
 
 private:
     QNetworkAccessManager *manager;

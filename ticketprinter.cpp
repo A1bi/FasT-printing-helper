@@ -10,9 +10,9 @@
 #include <poppler-qt5.h>
 
 #ifdef QT_DEBUG
-#define FAST_HOST "127.0.0.1:3000"
+#define FAST_URL "http://127.0.0.1:3000"
 #else
-#define FAST_HOST "theater-kaisersesch.de"
+#define FAST_URL "https://theater-kaisersesch.de"
 #endif
 
 TicketPrinter::TicketPrinter(QObject *parent) :
@@ -27,12 +27,10 @@ TicketPrinter::~TicketPrinter()
     delete manager;
 }
 
-void TicketPrinter::printTicket(const QString path)
+void TicketPrinter::printTicket(QString *path)
 {
-    QUrl url;
-    url.setScheme("https");
-    url.setHost(FAST_HOST);
-    url.setPath(path);
+    QUrl url(QString(FAST_URL));
+    url.setPath(QString(*path));
     QNetworkRequest request(url);
     manager->get(request);
 }

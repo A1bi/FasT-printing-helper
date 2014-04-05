@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QSettings>
 #include <QTranslator>
+#include <QRegExp>
 #include <QDebug>
 #ifdef Q_OS_MAC
 #include <Carbon/Carbon.h>
@@ -44,15 +45,21 @@ bool Application::eventFilter(QObject *object, QEvent *event)
     Q_UNUSED(object);
     if (event->type() == QEvent::FileOpen) {
         QString requestUrl = static_cast<QFileOpenEvent *>(event)->file();
-        qDebug() << requestUrl;
+        QRegExp rx("fastprint:/([a-z]+)(!(.+))?");
+        rx.indexIn(requestUrl);
+        QStringList list = rx.capturedTexts();
+        if (list[1] == "print" && !list[3].isEmpty()) {
+            queuedTicket = new QString(list[3]);
 
-        windowTimer->stop();
-        if (settings->value(printerNameSetting).toString().isEmpty()) {
-            if (!window) showWindow();
-            window->enableMissingPrinterMode();
-            queuedTicket = new QString(requestUrl);
-        } else {
-            // print
+            windowTimer->stop();
+            if (settings->value(printerNameSetting).toString().isEmpty()) {
+                if (!window) showWindow();
+                window->enableMissingPrinterMode();
+            } else {
+                printer->printTicket(queuedTicket);
+            }
+        } else if (list[1] != "test") {
+            if (!window) quit();
         }
         return true;
     }
@@ -86,7 +93,7 @@ QSettings* Application::getSettings()
 void Application::windowSubmitted()
 {
     if (queuedTicket) {
-        // print
+        printer->printTicket(queuedTicket);
     } else {
         quit();
     }
@@ -94,5 +101,7 @@ void Application::windowSubmitted()
 
 void Application::finishedPrinting()
 {
+    delete queuedTicket;
+    queuedTicket = NULL;
     quit();
 }
