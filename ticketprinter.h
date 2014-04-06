@@ -7,6 +7,12 @@ class QNetworkAccessManager;
 class QNetworkReply;
 class QByteArray;
 
+enum TicketPrinterError
+{
+    DownloadFailed,
+    ParseFailed
+};
+
 class TicketPrinter : public QObject
 {
     Q_OBJECT
@@ -22,6 +28,7 @@ private:
 
 signals:
     void finished();
+    void error(TicketPrinterError);
 
 private slots:
     void finishedDownloading(QNetworkReply*);

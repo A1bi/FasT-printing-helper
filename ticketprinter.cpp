@@ -38,6 +38,10 @@ void TicketPrinter::printTicket(QString *path)
 void TicketPrinter::printData(const QByteArray *data)
 {
     Poppler::Document *doc = Poppler::Document::loadFromData(*data);
+    if (!doc) {
+        emit error(ParseFailed);
+        return;
+    }
 
     QString printerName = static_cast<Application *>(qApp)->getSettings()->value(Application::printerNameSetting).toString();
     QPrinter printer(QPrinter::HighResolution);
@@ -61,6 +65,10 @@ void TicketPrinter::printData(const QByteArray *data)
 
 void TicketPrinter::finishedDownloading(QNetworkReply *reply)
 {
-    QByteArray const data = reply->readAll();
-    printData(&data);
+    if (reply->error() == QNetworkReply::NoError) {
+        QByteArray const data = reply->readAll();
+        printData(&data);
+    } else {
+        emit error(DownloadFailed);
+    }
 }

@@ -1,12 +1,13 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "ticketprinter.h"
 #include <QApplication>
 
 class MainWindow;
 class QTimer;
 class QSettings;
-class TicketPrinter;
+class QTranslator;
 
 class Application : public QApplication
 {
@@ -24,13 +25,16 @@ private:
     QSettings *settings;
     TicketPrinter *printer;
     QString *queuedTicket;
+    QTranslator *translator;
 
     bool eventFilter(QObject*, QEvent*);
+    void loadTranslator();
 
 private slots:
     void showWindow();
     void windowSubmitted();
     void finishedPrinting();
+    void printingError(TicketPrinterError);
 
 };
 

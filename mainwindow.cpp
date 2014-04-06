@@ -31,14 +31,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::enableMissingPrinterMode()
+void MainWindow::setMissingPrinterMode(bool enabled)
 {
-    ui->submitBtn->setText(tr("print"));
+    ui->submitBtn->setText(enabled ? tr("print") : tr("save"));
 }
 
 void MainWindow::submit()
 {
     settings->setValue(Application::printerNameSetting, ui->printerSelect->currentData());
     emit submitted();
-    close();
 }
