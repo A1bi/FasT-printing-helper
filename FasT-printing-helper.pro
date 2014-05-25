@@ -46,3 +46,9 @@ macx {
     QMAKE_EXTRA_TARGETS += CONVERT_STRINGS
     POST_TARGETDEPS += CONVERT_STRINGS
 }
+
+win32 {
+    INCLUDEPATH += C:\poppler\include\poppler-qt5
+
+    LIBS += C:\poppler\bin\libpoppler-qt5.dll
+}

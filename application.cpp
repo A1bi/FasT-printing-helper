@@ -12,6 +12,7 @@
 #include <Carbon/Carbon.h>
 #endif
 
+const QString Application::urlScheme = "fastprint";
 const QString Application::printerNameSetting = "printerName";
 
 Application::Application(int &argc, char **argv) :
@@ -36,6 +37,19 @@ Application::Application(int &argc, char **argv) :
     connect(windowTimer, SIGNAL(timeout()), this, SLOT(showWindow()));
     windowTimer->setSingleShot(true);
     windowTimer->start(100);
+
+#ifdef Q_OS_WIN32
+    QSettings registry("HKEY_CURRENT_USER\\Software\\Classes\\" + urlScheme, QSettings::NativeFormat);
+    registry.setValue(".", "URL:" + urlScheme + " Protocol");
+    registry.setValue("URL Protocol", "");
+    registry.setValue("shell/open/command/.", QString("\"" + qApp->applicationFilePath().replace("/", "\\") + "\" \"\%1\""));
+
+    if (argc > 1) {
+        QString request(argv[1]);
+        request.remove(urlScheme + ":");
+        handleRequest(&request);
+    }
+#endif
 }
 
 Application::~Application()
@@ -51,28 +65,34 @@ bool Application::eventFilter(QObject *object, QEvent *event)
     Q_UNUSED(object);
     if (event->type() == QEvent::FileOpen) {
         QString requestUrl = static_cast<QFileOpenEvent *>(event)->file();
-        QRegExp rx("fastprint:/([a-z]+)(!(.+))?");
-        rx.indexIn(requestUrl);
-        QStringList list = rx.capturedTexts();
-        if (list[1] == "print" && !list[3].isEmpty()) {
-            queuedTicket = new QString(list[3]);
-
-            windowTimer->stop();
-            bool missingPrinterMode = false;
-            if (settings->value(printerNameSetting).toString().isEmpty()) {
-                if (!window) showWindow();
-                missingPrinterMode = true;
-            } else {
-                printer->printTicket(queuedTicket);
-            }
-            if (window) window->setMissingPrinterMode(missingPrinterMode);
-        } else if (list[1] != "test") {
-            if (!window) quit();
-        }
+        requestUrl.remove(urlScheme + ":/");
+        handleRequest(&requestUrl);
         return true;
     }
 
     return false;
+}
+
+void Application::handleRequest(QString *request)
+{
+    QRegExp rx("([a-z]+)(!(.+))?");
+    rx.indexIn(*request);
+    QStringList list = rx.capturedTexts();
+    if (list[1] == "print" && !list[3].isEmpty()) {
+        queuedTicket = new QString(list[3]);
+
+        windowTimer->stop();
+        bool missingPrinterMode = false;
+        if (settings->value(printerNameSetting).toString().isEmpty()) {
+            if (!window) showWindow();
+            missingPrinterMode = true;
+        } else {
+            printer->printTicket(queuedTicket);
+        }
+        if (window) window->setMissingPrinterMode(missingPrinterMode);
+    } else if (list[1] != "test") {
+        if (!window) quit();
+    }
 }
 
 void Application::showWindow()
