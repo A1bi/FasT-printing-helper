@@ -49,10 +49,18 @@ void TicketPrinter::printData(const QByteArray *data)
         printer.setPrinterName(printerName);
     }
 
+    QSize ticketSize = doc->page(0)->pageSize();
+    QSize paperSize = QSize(ticketSize.height(), ticketSize.width());
+    printer.setPageSize(QPageSize(paperSize));
+    printer.setOrientation(QPrinter::Landscape);
+    printer.setFullPage(true);
+    printer.setPageMargins(QMarginsF(0, 0, 0, 0));
+
     QPainter painter(&printer);
     for (int i = 0; i < doc->numPages(); i++) {
         Poppler::Page *page = doc->page(i);
-        QImage image = page->renderToImage(300, 300, 0, 0);
+        double newSize = page->pageSize().width() * 2;
+        QImage image = page->renderToImage(newSize, newSize);
         painter.drawImage(0, 0, image);
         if (i < doc->numPages()-1) {
             printer.newPage();
