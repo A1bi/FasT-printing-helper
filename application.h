@@ -14,6 +14,7 @@ class Application : public QApplication
     Q_OBJECT
 public:
     static const QString printerNameSetting;
+    static const QString alignmentSetting;
     static const QString urlScheme;
 
     explicit Application(int&, char**);

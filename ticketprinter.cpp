@@ -43,25 +43,40 @@ void TicketPrinter::printData(const QByteArray *data)
         return;
     }
 
-    QString printerName = static_cast<Application *>(qApp)->getSettings()->value(Application::printerNameSetting).toString();
+    QSettings *settings = static_cast<Application *>(qApp)->getSettings();
+    QString printerName = settings->value(Application::printerNameSetting).toString();
+    int alignment = settings->value(Application::alignmentSetting, QVariant(0)).toInt();
     QPrinter printer(QPrinter::HighResolution);
     if (!printerName.isEmpty()) {
         printer.setPrinterName(printerName);
     }
 
-    QSize ticketSize = doc->page(0)->pageSize();
-    QSize paperSize = QSize(ticketSize.height(), ticketSize.width());
-    printer.setPageSize(QPageSize(paperSize));
+    if (!alignment) {
+        QSize ticketSize = doc->page(0)->pageSize();
+        QSize paperSize = QSize(ticketSize.height(), ticketSize.width());
+        printer.setPageSize(QPageSize(paperSize));
+    }
+
     printer.setOrientation(QPrinter::Landscape);
     printer.setFullPage(true);
     printer.setPageMargins(QMarginsF(0, 0, 0, 0));
 
     QPainter painter(&printer);
+    QRect paperRect = painter.viewport();
+
     for (int i = 0; i < doc->numPages(); i++) {
         Poppler::Page *page = doc->page(i);
-        double newSize = page->pageSize().width() * 2;
-        QImage image = page->renderToImage(newSize, newSize);
-        painter.drawImage(0, 0, image);
+        QImage image = page->renderToImage(printer.resolution(), printer.resolution());
+        int pos = 0;
+        switch (alignment) {
+        case 2:
+            pos = paperRect.height() / 2 - image.size().height() / 2;
+            break;
+        case 3:
+            pos = paperRect.height() - image.size().height();
+            break;
+        }
+        painter.drawImage(0, pos, image);
         if (i < doc->numPages()-1) {
             printer.newPage();
         }

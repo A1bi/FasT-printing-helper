@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->printerSelect->setCurrentIndex(i);
         }
     }
+
+    ui->alignmentSelect->setCurrentIndex(settings->value(Application::alignmentSetting).toInt());
 }
 
 MainWindow::~MainWindow()
@@ -39,5 +41,6 @@ void MainWindow::setMissingPrinterMode(bool enabled)
 void MainWindow::submit()
 {
     settings->setValue(Application::printerNameSetting, ui->printerSelect->currentData());
+    settings->setValue(Application::alignmentSetting, ui->alignmentSelect->currentIndex());
     emit submitted();
 }

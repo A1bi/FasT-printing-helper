@@ -14,6 +14,7 @@
 
 const QString Application::urlScheme = "fastprint";
 const QString Application::printerNameSetting = "printerName";
+const QString Application::alignmentSetting = "alignment";
 
 Application::Application(int &argc, char **argv) :
     QApplication(argc, argv)
