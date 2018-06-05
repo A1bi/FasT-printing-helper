@@ -47,6 +47,8 @@ macx {
     CONVERT_STRINGS.commands = "plutil -convert binary1 $${TARGET}.app/Contents/Resources/de.lproj/InfoPlist.strings"
     QMAKE_EXTRA_TARGETS += CONVERT_STRINGS
     POST_TARGETDEPS += CONVERT_STRINGS
+
+    ICON = assets/Icon.icns
 }
 
 win32 {

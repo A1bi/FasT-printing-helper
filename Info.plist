@@ -5,7 +5,7 @@
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
     <key>CFBundleIconFile</key>
-    <string></string>
+    <string>Icon.icns</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>de</string>
     <key>CFBundlePackageType</key>

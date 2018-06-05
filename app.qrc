@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>i18n/app_de.qm</file>
+        <file>assets/Icon.icns</file>
     </qresource>
 </RCC>
