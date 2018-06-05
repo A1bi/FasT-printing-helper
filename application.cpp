@@ -65,22 +65,20 @@ bool Application::eventFilter(QObject *object, QEvent *event)
 {
     Q_UNUSED(object);
     if (event->type() == QEvent::FileOpen) {
-        QString requestUrl = static_cast<QFileOpenEvent *>(event)->file();
-        requestUrl.remove(urlScheme + ":/");
-        handleRequest(&requestUrl);
+        QUrl requestUrl = static_cast<QFileOpenEvent *>(event)->url();
+        if (requestUrl.scheme() == urlScheme) {
+            handleRequest(requestUrl.host(), requestUrl.path());
+        }
         return true;
     }
 
     return false;
 }
 
-void Application::handleRequest(QString *request)
+void Application::handleRequest(QString action, QString params)
 {
-    QRegExp rx("([a-z]+)(!(.+))?");
-    rx.indexIn(*request);
-    QStringList list = rx.capturedTexts();
-    if (list[1] == "print" && !list[3].isEmpty()) {
-        queuedTicket = new QString(list[3]);
+    if (action == "print" && !params.isEmpty()) {
+        queuedTicket = new QString(params);
 
         windowTimer->stop();
         bool missingPrinterMode = false;
@@ -91,7 +89,8 @@ void Application::handleRequest(QString *request)
             printer->printTicket(queuedTicket);
         }
         if (window) window->setMissingPrinterMode(missingPrinterMode);
-    } else if (list[1] != "test") {
+
+    } else if (action != "settings") {
         if (!window) quit();
     }
 }

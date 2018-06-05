@@ -31,7 +31,7 @@ private:
 
     bool eventFilter(QObject*, QEvent*);
     void loadTranslator();
-    void handleRequest(QString*);
+    void handleRequest(QString, QString);
 
 private slots:
     void showWindow();
