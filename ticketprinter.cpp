@@ -10,9 +10,9 @@
 #include <poppler-qt5.h>
 
 #ifdef QT_DEBUG
-#define FAST_URL "http://127.0.0.1:3000"
+#define FAST_URL "http://localhost:3000"
 #else
-#define FAST_URL "https://theater-kaisersesch.de"
+#define FAST_URL "https://www.theater-kaisersesch.de"
 #endif
 
 TicketPrinter::TicketPrinter(QObject *parent) :

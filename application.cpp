@@ -99,10 +99,8 @@ void Application::handleRequest(QString *request)
 void Application::showWindow()
 {
 #ifdef Q_OS_MAC
-    ProcessSerialNumber psn;
-    if (GetCurrentProcess(&psn) == noErr) {
-        TransformProcessType(&psn, kProcessTransformToForegroundApplication);
-    }
+    ProcessSerialNumber psn = { 0, kCurrentProcess };
+    TransformProcessType(&psn, kProcessTransformToForegroundApplication);
 #endif
 
     loadTranslator();
